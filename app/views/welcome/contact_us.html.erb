@@ -1,0 +1,26 @@
+<h1>Contact Us</h1>
+
+<%# <form>
+</form> %>
+
+<%# rails has special helper methods that are available in any view which help us
+    build out HTML
+ %>
+
+
+ <%= form_tag('/process_contact') do %>
+    <div>
+        <%= label_tag(:full_name) %><br />
+        <%= text_field_tag(:full_name) %>
+    </div>
+
+    <div>
+        <%= label_tag(:email) %><br />
+        <%= email_field_tag(:email) %>
+    </div>
+    <div>
+        <%= label_tag(:message) %><br />
+        <%= text_area_tag(:message) %>
+    </div>
+  <div><%= submit_tag 'Contact Us' %></div>
+<% end %>

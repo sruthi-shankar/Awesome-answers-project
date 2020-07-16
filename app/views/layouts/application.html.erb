@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AwesomeAnswersBootcampMay2020</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application' %>
+    <%#
+      above 👆 we area including the JavaScript code to the app.
+      javascript_pack_tag is a helper method that's provided by
+      webpacker. This is equivalent to javascript_link_tag from
+      asset pipeline.
+      The javascript_pack_tag takes care of making sure that 
+      it references compiled assets properly in development mode
+      as well as in production mode similar to teh assets pipeline 
+    %>
+  </head>
+
+  <body>
+    <!-- <a href="/contact/new">Contact Us</a> -->
+    <%# 
+      'link_to' is a method called view helper that comes with Rails and 
+      it generates <a> tag
+    %>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <a class="navbar-brand" href="#">Awesome Answers</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+
+            </ul>
+            <ul class="navbar-nav navigation-links">
+                <li class="nav-item nav-links">
+                    <%= link_to 'Contact Us', contact_us_path %>
+                </li>
+                <li class="nav-item nav-links">
+                    <%= link_to 'New Question', new_question_path %>
+                </li>
+                <li class="nav-item nav-links">
+                    <%= link_to 'All Questions', questions_path %>
+                </li>
+                <li class="nav-item nav-links">
+                  <% if user_signed_in? %>
+                    <%= current_user.full_name %>
+                    <%= link_to "Log Out", session_path, method: :delete, class: 'btn btn-danger' %>
+                    <% else %>
+                    <%= link_to "Sign In", new_session_path %>
+                  <% end %>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+      <%# 
+        flash is a hash (ruby object) available in all views. Here we're 
+        looping hash and display its contents
+        Just to show user that things are happening
+      %>
+      <% flash.each do |type, message| %>
+        <div class="bg-<%= type %> p-3 rounded mb-2 shadow-sm">
+          <%= message %>
+        </div>
+      <% end %>
+    <%= yield %>
+    <div>
+  </body>
+</html>

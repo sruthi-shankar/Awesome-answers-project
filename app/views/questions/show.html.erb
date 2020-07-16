@@ -1,0 +1,96 @@
+<div class="shadow-sm p-3 mb-5 bg-white rounded overflow-wrap">
+    <h1>
+        <span class="badge badge-pill badge-info">
+            <%= @question.title %>
+        </span>
+    </h1>
+    <p class="shadow-none p-3 mb-5 bg-light rounded"><%= @question.body %></p>
+    <p class="text-muted"><%= @question.user.full_name %></p>
+    <p>
+        <%= @question.created_at %>
+    </p>
+
+    <div>
+    <% if can? :crud, @question %>
+        <%= link_to "Edit", edit_question_path(@question), class: 'btn btn-info' %>
+        <%= link_to "Delete", question_path(@question), 
+            method: :delete, 
+            class: 'btn btn-danger',
+            data: { confirm: "Are you sure?" } 
+        %>
+    </div>
+    <% end %>
+</div>
+
+<hr />
+
+<%# 
+    To create a form for a resource (i.e. model), use
+    the form_for helper instead of form_tag. Its usual 
+    arguments
+    - A named argument 'model' which is assigned an 
+        instance of a model (i.e. a new question)
+    - A named argument 'local', which will prevent
+        the form from submitting its data using 'ajax'
+    - A block that is passed the form object, where 
+        we build the HTML inside the form (i.e. labels, 
+        inputs, submission buttons, etc...)
+
+    All data from the input fields a form built with this will have its name-value
+    nested in a hash named after the class of the passed model 
+    (e.g. <input type="text" name="question[title]" id="questio_title"> => {
+        "question": { "title": "your question title" }
+    })
+%>
+
+<%# https://guides.rubyonrails.org/form_helpers.html %>
+<%= form_with(model: [@question, @answer], local: true) do |f| %>
+    <% if @answer.errors.any? %>
+        <ul>
+            <% @answer.errors.full_messages.each do |msg| %>
+                <li class="text-danger"><%= msg %></li>
+            <% end %>
+        </ul>
+    <% end %>
+
+    <div class="form-group">
+       <%= f.text_area(
+           :body,
+           cols: 50,
+           rows: 5,
+           placeholder: "What are your thoughts?",
+           class: "form-control"
+       )%>
+    </div>
+
+    <%= f.submit "Answer", class: "btn-primary" %>
+
+<% end %>
+
+<ul class="list-group answer-list">
+    <% @answers.each do |answer| %>
+        <li class="list-group-item">
+            <p>
+                <%= answer.body %>
+            </p>
+            <small>
+            <% if can? :crud, answer %>
+             <%= link_to(
+                 "Delete",
+                 question_answer_path(@question, answer),
+                 method: :delete,
+                 data: {
+                     confirm: "Are you sure?"
+                 },
+                 class: "btn btn-danger btn-sm"
+             )%>
+            </small>
+            |<% end %>
+            <small>
+                Answered <%= time_ago_in_words(answer.created_at) %>
+                Answered <%= time_ago_in_words(answer.created_at) %> By <%= answer.user.full_name %>
+            </small>
+            </p>
+        </li>
+    <% end %>
+</ul>
